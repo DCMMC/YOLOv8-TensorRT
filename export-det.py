@@ -22,11 +22,11 @@ def parse_args():
                         help='PyTorch yolov8 weights')
     parser.add_argument('--iou-thres',
                         type=float,
-                        default=0.65,
+                        default=0.5,
                         help='IOU threshoud for NMS plugin')
     parser.add_argument('--conf-thres',
                         type=float,
-                        default=0.25,
+                        default=0.,
                         help='CONF threshoud for NMS plugin')
     parser.add_argument('--topk',
                         type=int,
@@ -69,17 +69,30 @@ def main(args):
         model(fake_input)
     save_path = args.weights.replace('.pt', '.onnx')
     with BytesIO() as f:
+        if b == -1:
+            dynamic_axes = {
+                'input': {
+                    0: 'batch_size',
+                },
+                'output': {
+                    0: 'batch_size',
+                }
+            }
+            b = 'batch_size'
+        else:
+            dynamic_axes = None
         torch.onnx.export(
             model,
             fake_input,
             f,
             opset_version=args.opset,
             input_names=['images'],
-            output_names=['num_dets', 'bboxes', 'scores', 'labels'])
+            output_names=['output'],
+            dynamic_axes=dynamic_axes)
         f.seek(0)
         onnx_model = onnx.load(f)
     onnx.checker.check_model(onnx_model)
-    shapes = [b, 1, b, args.topk, 4, b, args.topk, b, args.topk]
+    shapes = [b, 600]
     for i in onnx_model.graph.output:
         for j in i.type.tensor_type.shape.dim:
             j.dim_param = str(shapes.pop(0))

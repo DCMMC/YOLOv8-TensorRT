@@ -95,8 +95,8 @@ class PostDetect(nn.Module):
     export = True
     shape = None
     dynamic = False
-    iou_thres = 0.65
-    conf_thres = 0.25
+    iou_thres = 0.5
+    conf_thres = 0.
     topk = 100
 
     def __init__(self, *args, **kwargs):
@@ -120,8 +120,17 @@ class PostDetect(nn.Module):
         boxes = self.anchors.repeat(b, 2, 1) + torch.cat([boxes0, boxes1], 1)
         boxes = boxes * self.strides
 
-        return TRT_NMS.apply(boxes.transpose(1, 2), scores.transpose(1, 2),
-                             self.iou_thres, self.conf_thres, self.topk)
+        _, det_boxes, det_scores, det_classes = TRT_NMS.apply(
+            boxes.transpose(1, 2), scores.transpose(1, 2),
+            self.iou_thres, self.conf_thres, self.topk)
+        det_boxes = det_boxes[:, :self.topk, :]
+        det_scores = torch.unsqueeze(det_scores, 2)[:, :self.topk, :]
+        det_classes = torch.unsqueeze(det_classes, 2)[:, :self.topk, :]
+        # (N, 100, 6)
+        out = torch.cat([det_boxes, det_scores, det_classes], -1)
+        # (N, 600)
+        out = torch.flatten(out, start_dim=1)
+        return out
 
 
 class PostSeg(nn.Module):
