@@ -125,7 +125,7 @@ class PostDetect(nn.Module):
             self.iou_thres, self.conf_thres, self.topk)
         det_boxes = det_boxes[:, :self.topk, :]
         det_scores = torch.unsqueeze(det_scores, 2)[:, :self.topk, :]
-        det_classes = torch.unsqueeze(det_classes, 2)[:, :self.topk, :]
+        det_classes = torch.unsqueeze(det_classes, 2).float()[:, :self.topk, :]
         # (N, 100, 6)
         out = torch.cat([det_boxes, det_scores, det_classes], -1)
         # (N, 600)
