@@ -89,9 +89,9 @@ class EngineBuilder:
         parser = trt.OnnxParser(self.network, self.logger)
         onnx_model = onnx.load(str(self.checkpoint))
         if not self.seg:
-            onnx_model.graph.node[-1].attribute[2].i = topk
-            onnx_model.graph.node[-1].attribute[3].f = conf_thres
-            onnx_model.graph.node[-1].attribute[4].f = iou_thres
+            onnx_model.graph.node[-8].attribute[2].i = topk
+            onnx_model.graph.node[-8].attribute[3].f = conf_thres
+            onnx_model.graph.node[-8].attribute[4].f = iou_thres
 
         if not parser.parse(onnx_model.SerializeToString()):
             raise RuntimeError(
