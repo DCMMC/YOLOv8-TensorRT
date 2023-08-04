@@ -45,7 +45,7 @@ class EngineBuilder:
         if input_shape[0] == -1:
             config = builder.create_builder_config()
             profile = builder.create_optimization_profile()
-            img_sz = input_shape[1:]
+            img_sz = tuple(input_shape[1:])
             profile.set_shape("input", (1, ) + img_sz, (16, ) + img_sz, (32, ) + img_sz)
             config.add_optimization_profile(profile)
         config.max_workspace_size = torch.cuda.get_device_properties(
