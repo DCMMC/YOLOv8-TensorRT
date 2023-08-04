@@ -35,9 +35,7 @@ def main(args: argparse.Namespace) -> None:
         tensor = torch.tensor(tensor, device=device)
         # inference
         data = Engine(tensor)
-        data = data.reshape((-1, 100, 6)).split((4, 1, 1), -1)
-
-        bboxes, scores, labels = det_postprocess(data)
+        bboxes, scores, labels = data.reshape((-1, 100, 6)).split((4, 1, 1), -1)
         scores = scores.squeeze(-1)
         labels = labels.squeeze(-1)
         if bboxes.numel() == 0:
