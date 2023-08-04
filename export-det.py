@@ -64,7 +64,9 @@ def main(args):
         optim(m)
         m.to(args.device)
     model.to(args.device)
-    fake_input = torch.randn(args.input_shape).to(args.device)
+    fake_input = torch.randn(
+        args.input_shape if args.input_shape[0] != -1 else (1, ) + tuple(args.input_shape[1:])
+    ).to(args.device)
     for _ in range(2):
         model(fake_input)
     save_path = args.weights.replace('.pt', '.onnx')
