@@ -43,11 +43,11 @@ class EngineBuilder:
         config = builder.create_builder_config()
         # [ref] https://docs.nvidia.com/deeplearning/tensorrt/developer-guide/index.html#work_dynamic_shapes
         if input_shape[0] == -1:
-            self.config = self.builder.create_builder_config()
-            profile = self.builder.create_optimization_profile()
+            config = builder.create_builder_config()
+            profile = builder.create_optimization_profile()
             img_sz = input_shape[1:]
             profile.set_shape("input", (1, ) + img_sz, (16, ) + img_sz, (32, ) + img_sz)
-            self.config.add_optimization_profile(profile)
+            config.add_optimization_profile(profile)
         config.max_workspace_size = torch.cuda.get_device_properties(
             self.device).total_memory
         flag = (1 << int(trt.NetworkDefinitionCreationFlag.EXPLICIT_BATCH))
