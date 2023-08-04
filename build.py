@@ -11,11 +11,11 @@ def parse_args():
                         help='Weights file')
     parser.add_argument('--iou-thres',
                         type=float,
-                        default=0.65,
+                        default=0.5,
                         help='IOU threshoud for NMS plugin')
     parser.add_argument('--conf-thres',
                         type=float,
-                        default=0.25,
+                        default=0.,
                         help='CONF threshoud for NMS plugin')
     parser.add_argument('--topk',
                         type=int,
@@ -24,7 +24,7 @@ def parse_args():
     parser.add_argument('--input-shape',
                         nargs='+',
                         type=int,
-                        default=[1, 3, 640, 640],
+                        default=[-1, 3, 640, 640],
                         help='Model input shape only for api builder')
     parser.add_argument('--fp16',
                         action='store_true',

@@ -42,7 +42,7 @@ def parse_args():
     parser.add_argument('--input-shape',
                         nargs='+',
                         type=int,
-                        default=[1, 3, 640, 640],
+                        default=[-1, 3, 640, 640],
                         help='Model input shape only for api builder')
     parser.add_argument('--device',
                         type=str,
