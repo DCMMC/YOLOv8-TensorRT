@@ -16,7 +16,7 @@ def main(args: argparse.Namespace) -> None:
     H, W = Engine.inp_info[0].shape[-2:]
 
     # set desired output names order
-    Engine.set_desired(['num_dets', 'bboxes', 'scores', 'labels'])
+    Engine.set_desired(['output'])
 
     images = path_to_list(args.imgs)
     save_path = Path(args.out_dir)

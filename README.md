@@ -66,7 +66,7 @@ python3 export-det.py \
 --topk 100 \
 --opset 11 \
 --sim \
---input-shape 1 3 640 640 \
+--input-shape -1 3 640 640 \
 --device cuda:0
 ```
 
@@ -107,9 +107,6 @@ Usage:
 ``` shell
 python3 build.py \
 --weights yolov8s.onnx \
---iou-thres 0.65 \
---conf-thres 0.25 \
---topk 100 \
 --fp16  \
 --device cuda:0
 ```
