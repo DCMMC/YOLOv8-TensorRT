@@ -46,7 +46,7 @@ class EngineBuilder:
             config = builder.create_builder_config()
             profile = builder.create_optimization_profile()
             img_sz = tuple(input_shape[1:])
-            profile.set_shape("input", (1, ) + img_sz, (16, ) + img_sz, (32, ) + img_sz)
+            profile.set_shape("images", (1, ) + img_sz, (16, ) + img_sz, (32, ) + img_sz)
             config.add_optimization_profile(profile)
         config.max_workspace_size = torch.cuda.get_device_properties(
             self.device).total_memory
@@ -232,6 +232,8 @@ class TRTModule(torch.nn.Module):
             model = runtime.deserialize_cuda_engine(self.weight.read_bytes())
 
         context = model.create_execution_context()
+        context.set_optimization_profile_async(0, self.stream.cuda_stream)
+        context.set_input_shape("images", (1, 3, 640, 640))
         num_bindings = model.num_bindings
         names = [model.get_binding_name(i) for i in range(num_bindings)]
 
