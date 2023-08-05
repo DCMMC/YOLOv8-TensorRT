@@ -73,7 +73,7 @@ def main(args):
     with BytesIO() as f:
         if b == -1:
             dynamic_axes = {
-                'input': {
+                'images': {
                     0: 'batch_size',
                 },
                 'output': {
