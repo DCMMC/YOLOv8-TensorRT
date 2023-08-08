@@ -61,9 +61,9 @@ You can export your onnx model by `ultralytics` API and add postprocess such as 
 ``` shell
 python3 export-det.py \
 --weights yolov8s.pt \
---iou-thres 0.65 \
---conf-thres 0.25 \
---topk 100 \
+--iou-thres 0.7 \
+--conf-thres 0.001 \
+--topk 300 \
 --opset 11 \
 --sim \
 --input-shape -1 3 640 640 \
